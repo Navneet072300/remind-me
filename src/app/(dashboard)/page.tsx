@@ -1,3 +1,4 @@
+import CollectionCard from "@/components/CollectionCard";
 import CreateCollectionBtn from "@/components/CreateCollectionBtn";
 import Sadface from "@/components/icons/Sadface";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
@@ -65,4 +66,15 @@ async function CollectionList() {
       </div>
     );
   }
+
+  return (
+    <>
+      <CreateCollectionBtn />
+      <div className="flex flex-col gap-4 mt-6">
+        {collections.map((collection) => (
+          <CollectionCard key={collection.id} collection={collection} />
+        ))}
+      </div>
+    </>
+  );
 }
