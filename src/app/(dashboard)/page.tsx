@@ -4,7 +4,6 @@ import Sadface from "@/components/icons/Sadface";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Skeleton } from "@/components/ui/skeleton";
 import prisma from "@/lib/prisma";
-import { wait } from "@/lib/wait";
 import { currentUser } from "@clerk/nextjs/server";
 import { Suspense } from "react";
 
@@ -24,12 +23,12 @@ export default async function Home() {
 async function WelcomeMsg() {
   const user = await currentUser();
   if (!user) {
-    return <div>error</div>;
+    return <div>Error: User not found</div>;
   }
   return (
     <div className="flex w-full mb-12">
-      <h1 className=" text-4xl font-bold">
-        Welcome, <br /> {user?.firstName}
+      <h1 className="text-4xl font-bold">
+        Welcome, <br /> {user.firstName}
       </h1>
     </div>
   );
@@ -38,9 +37,9 @@ async function WelcomeMsg() {
 function WelcomeMsgFallback() {
   return (
     <div className="flex w-full mb-12">
-      <h1 className=" text-4xl font-bold">
-        <Skeleton className=" w-[150px] h-[36px]" />
-        <Skeleton className=" w-[150px] h-[36px]" />
+      <h1 className="text-4xl font-bold">
+        <Skeleton className="w-[150px] h-[36px]" />
+        <Skeleton className="w-[150px] h-[36px]" />
       </h1>
     </div>
   );
@@ -48,7 +47,14 @@ function WelcomeMsgFallback() {
 
 async function CollectionList() {
   const user = await currentUser();
+  if (!user) {
+    return <div>Error: User not authenticated</div>;
+  }
+
   const collections = await prisma.collection.findMany({
+    include: {
+      tasks: true,
+    },
     where: {
       userId: user?.id,
     },
@@ -59,8 +65,10 @@ async function CollectionList() {
       <div className="flex flex-col gap-5">
         <Alert>
           <Sadface />
-          <AlertTitle>There are no collectins yet!</AlertTitle>
-          <AlertDescription>Create a collectin to get started</AlertDescription>
+          <AlertTitle>No collections yet!</AlertTitle>
+          <AlertDescription>
+            Create a collection to get started.
+          </AlertDescription>
         </Alert>
         <CreateCollectionBtn />
       </div>

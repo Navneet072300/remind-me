@@ -46,7 +46,7 @@ export default function RootLayout({
             <div className=" flex max-h-screen w-full flex-col items-center dark:bg-black">
               <Navbar />
               <Separator />
-              <main className=" flex flex-grow w-full items-center justify-center dark:bg-neutral-950">
+              <main className=" flex flex-grow w-full h-full items-center justify-center dark:bg-neutral-950">
                 {children}
                 <Toaster />
               </main>
